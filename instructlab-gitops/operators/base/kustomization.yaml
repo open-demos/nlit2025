@@ -6,5 +6,6 @@ resources:
 - serverless
 - service-mesh
 - gpu-operator
+- odf
 # - disconnected
 # Uncomment the above line to enable the disconnected ImageContentSourcePolicy
