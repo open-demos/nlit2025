@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
 - subscription.yaml
 - storagesystem.yaml
-- bucket.yaml
-- obc.yaml
+# - bucket.yaml
+# - obc.yaml
