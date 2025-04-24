@@ -13,6 +13,9 @@ PIPELINE_NAMESPACE ?= data-science-project
 # Default environment
 ENV ?= dev
 
+ADMIN_PASSWD=$(shell command oc get secret openshift-gitops-cluster -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d)
+SERVER_URL=$(shell command oc get routes openshift-gitops-server -n openshift-gitops -o jsonpath='{.status.ingress[0].host}')
+
 # Detect operating system
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -28,7 +31,7 @@ ifeq ($(UNAME_S),Darwin)
     BREW_INSTALLED := $(shell command -v brew 2> /dev/null)
 endif
 
-.PHONY: help install-tools validate-all validate-operators validate-pipeline apply-operators apply-pipeline run-pipeline clean update-repos
+.PHONY: help install-tools argocd-login validate-all validate-operators validate-pipeline apply-operators apply-pipeline run-pipeline clean update-repos
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -69,6 +72,9 @@ else
 	@$(INSTALL_CMD) argocd-linux-amd64 /usr/local/bin/argocd
 endif
 
+argocd-login: ## Log in to ArgoCD without tls verification
+	@argocd login ${SERVER_URL} --username admin --password ${ADMIN_PASSWD} --insecure --skip-test-tls
+
 validate-all: validate-operators validate-pipeline ## Validate all Kubernetes manifests
 
 validate-operators: ## Validate operator manifests
@@ -82,12 +88,12 @@ validate-pipeline: ## Validate pipeline manifests
 apply-operators: validate-operators ## Apply operator manifests to the cluster
 	@echo "Applying operator manifests to the cluster..."
 	@oc apply -f argocd/app-of-apps.yaml -n $(ARGOCD_NAMESPACE)
-	@echo "Operators application deployed. Check status with: argocd app get openshift-ai-stack -n $(ARGOCD_NAMESPACE)"
+	@echo "Operators application deployed. Check status with: argocd app get openshift-ai-stack"
 
 apply-pipeline: validate-pipeline ## Apply pipeline manifests to the cluster
 	@echo "Applying pipeline manifests to the cluster..."
 	@oc apply -f argocd/instructlab-pipeline-app.yaml -n $(ARGOCD_NAMESPACE)
-	@echo "Pipeline application deployed. Check status with: argocd app get instructlab-pipeline -n $(ARGOCD_NAMESPACE)"
+	@echo "Pipeline application deployed. Check status with: argocd app get instructlab-pipeline"
 
 run-pipeline: ## Run the pipeline with parameters from scripts/pipeline-parameters.env
 	@echo "Running InstructLab pipeline..."
