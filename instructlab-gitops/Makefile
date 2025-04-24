@@ -111,5 +111,5 @@ endif
 
 sync-all: ## Sync all ArgoCD applications
 	@echo "Syncing all ArgoCD applications..."
-	@argocd app sync openshift-ai-stack -n $(ARGOCD_NAMESPACE)
-	@argocd app sync instructlab-pipeline -n $(ARGOCD_NAMESPACE)
+	@argocd app sync openshift-ai-stack
+	@argocd app sync instructlab-pipeline

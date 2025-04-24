@@ -1,18 +1,18 @@
-apiVersion: objectbucket.io/v1alpha1
-kind: ObjectBucketClaim
-metadata:
-  name: pipeline-bucket
-  namespace: data-science-project
-  finalizers:
-    - objectbucket.io/finalizer
-  labels:
-    app: noobaa
-    bucket-provisioner: openshift-storage.noobaa.io-obc
-    noobaa-domain: openshift-storage.noobaa.io
-spec:
-  additionalConfig:
-    bucketclass: noobaa-default-bucket-class
-  bucketName: pipeline-bucket-fbd9ed69-530d-4728-9021-120d7a00a845
-  generateBucketName: pipeline-bucket
-  objectBucketName: obc-data-science-project-pipeline-bucket
-  storageClassName: openshift-storage.noobaa.io
+# apiVersion: objectbucket.io/v1alpha1
+# kind: ObjectBucketClaim
+# metadata:
+#   name: pipeline-bucket
+#   namespace: data-science-project
+#   finalizers:
+#     - objectbucket.io/finalizer
+#   labels:
+#     app: noobaa
+#     bucket-provisioner: openshift-storage.noobaa.io-obc
+#     noobaa-domain: openshift-storage.noobaa.io
+# spec:
+#   additionalConfig:
+#     bucketclass: noobaa-default-bucket-class
+#   bucketName: pipeline-bucket-fbd9ed69-530d-4728-9021-120d7a00a845
+#   generateBucketName: pipeline-bucket
+#   objectBucketName: obc-data-science-project-pipeline-bucket
+#   storageClassName: openshift-storage.noobaa.io
